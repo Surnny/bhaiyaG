@@ -220,12 +220,12 @@ function Contact() {
                       WhatsApp
                     </p>
                     <a
-                      href="https://api.whatsapp.com/send/?phone=918864975281&text&type=phone_number&app_absent=0"
+                      href="https://api.whatsapp.com/send/?phone=917889844597&text&type=phone_number&app_absent=0"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 transition-colors duration-300 hover:underline"
                     >
-                      +91 8864975281
+                      +91 7889844597
                     </a>
                   </div>
                 </div>
