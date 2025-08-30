@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import bcrypt from "bcryptjs";
 import { Lock, Mail, User, Eye, EyeOff, UserPlus } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
 
 
 function Signup() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -57,7 +59,7 @@ function Signup() {
       });
 
       alert("✅ Signup successful! Please login.");
-      window.location.href = "/login";
+      navigate("/login");
     } catch (err) {
       console.error("Signup error:", err);
       alert("Error signing up. Try again.");
