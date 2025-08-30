@@ -15,10 +15,10 @@ import { useTheme } from "../context/ThemeContext";
 function ManageUsers() {
   const DATABASE_URL = import.meta.env.VITE_DATABASE_URL;
   const [users, setUsers] = useState({});
-  const [blocked, setBlocked] = useState({});
   const navigate = useNavigate();
   const { theme } = useTheme();
 
+  // Add your admin emails here
   const adminEmails = [
     "ayush25.kandari@gmail.com",
     "sphsinghpharswan@gmail.com",
@@ -28,12 +28,9 @@ function ManageUsers() {
     fetch(`${DATABASE_URL}/users.json`)
       .then((res) => res.json())
       .then((data) => setUsers(data || {}));
-
-    fetch(`${DATABASE_URL}/blocked.json`)
-      .then((res) => res.json())
-      .then((data) => setBlocked(data || {}));
   }, []);
 
+  // Delete user completely
   const deleteUser = async (key) => {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
 
@@ -43,49 +40,49 @@ function ManageUsers() {
     setUsers(updated);
   };
 
-  const blockUser = async (key, email, password) => {
+  // Block user by setting block: true
+  const blockUser = async (key, user) => {
     if (!window.confirm("Are you sure you want to block this user?")) return;
 
-    await fetch(`${DATABASE_URL}/blocked/${key}.json`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+    // Protect admins
+    if (adminEmails.includes(user.email)) {
+      alert("❌ You cannot block an admin!");
+      return;
+    }
 
-    await fetch(`${DATABASE_URL}/users/${key}.json`, { method: "DELETE" });
-
-    const updated = { ...users };
-    delete updated[key];
-    setUsers(updated);
-
-    setBlocked((prev) => ({ ...prev, [key]: { email, password } }));
-  };
-
-  const unblockUser = async (key, email, password) => {
-    if (!window.confirm("Unblock this user? They will regain access.")) return;
+    const updatedUser = { ...user, block: true };
 
     await fetch(`${DATABASE_URL}/users/${key}.json`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify(updatedUser),
     });
 
-    await fetch(`${DATABASE_URL}/blocked/${key}.json`, { method: "DELETE" });
-
-    const updated = { ...blocked };
-    delete updated[key];
-    setBlocked(updated);
-
-    setUsers((prev) => ({ ...prev, [key]: { email, password } }));
+    setUsers((prev) => ({ ...prev, [key]: updatedUser }));
   };
 
-  // Null-safe counts
-  const activeUsers = Object.values(users).filter((u) => u);
-  const blockedUsers = Object.values(blocked).filter((u) => u);
+  // Unblock user by setting block: false
+  const unblockUser = async (key, user) => {
+    if (!window.confirm("Unblock this user? They will regain access.")) return;
+
+    const updatedUser = { ...user, block: false };
+
+    await fetch(`${DATABASE_URL}/users/${key}.json`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedUser),
+    });
+
+    setUsers((prev) => ({ ...prev, [key]: updatedUser }));
+  };
+
+  // Counts
+  const activeUsers = Object.values(users).filter((u) => u && !u.block);
+  const blockedUsers = Object.values(users).filter((u) => u && u.block);
   const activeUsersCount = activeUsers.length;
   const blockedUsersCount = blockedUsers.length;
-  const adminCount = activeUsers.filter((user) =>
-    adminEmails.includes(user.email)
+  const adminCount = activeUsers.filter((u) =>
+    adminEmails.includes(u.email)
   ).length;
   const studentCount = activeUsersCount - adminCount;
 
@@ -163,7 +160,6 @@ function ManageUsers() {
 
         {/* Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          {/* Active Users */}
           <StatCard
             icon={
               <Users
@@ -178,7 +174,6 @@ function ManageUsers() {
             theme={theme}
             bgColor={theme === "dark" ? "bg-green-500/20" : "bg-green-100"}
           />
-          {/* Blocked Users */}
           <StatCard
             icon={
               <Ban
@@ -191,7 +186,6 @@ function ManageUsers() {
             theme={theme}
             bgColor={theme === "dark" ? "bg-red-500/20" : "bg-red-100"}
           />
-          {/* Admins */}
           <StatCard
             icon={
               <Shield
@@ -206,7 +200,6 @@ function ManageUsers() {
             theme={theme}
             bgColor={theme === "dark" ? "bg-orange-500/20" : "bg-orange-100"}
           />
-          {/* Students */}
           <StatCard
             icon={
               <CheckCircle
@@ -221,18 +214,12 @@ function ManageUsers() {
           />
         </div>
 
-        {/* Active Users Table */}
+        {/* Users Table */}
         <UserTable
           users={users}
           adminEmails={adminEmails}
           deleteUser={deleteUser}
           blockUser={blockUser}
-          theme={theme}
-        />
-
-        {/* Blocked Users Table */}
-        <BlockedTable
-          blocked={blocked}
           unblockUser={unblockUser}
           theme={theme}
         />
@@ -277,7 +264,15 @@ const StatCard = ({ icon, count, label, theme, bgColor }) => (
   </div>
 );
 
-const UserTable = ({ users, adminEmails, deleteUser, blockUser, theme }) => {
+const UserTable = ({
+  users,
+  adminEmails,
+  deleteUser,
+  blockUser,
+  unblockUser,
+  theme,
+}) => {
+  const entries = Object.entries(users).filter(([k, u]) => u);
   return (
     <div
       className={`backdrop-blur-lg rounded-2xl shadow-xl border mb-8 overflow-hidden ${
@@ -301,7 +296,7 @@ const UserTable = ({ users, adminEmails, deleteUser, blockUser, theme }) => {
             />
           </div>
           <h2 className="text-xl font-bold text-gray-800 dark:text-gray-200">
-            Active Users
+            Users
           </h2>
         </div>
       </div>
@@ -333,15 +328,20 @@ const UserTable = ({ users, adminEmails, deleteUser, blockUser, theme }) => {
                   theme === "dark" ? "text-gray-300" : "text-gray-700"
                 }`}
               >
+                Status
+              </th>
+              <th
+                className={`p-4 text-left font-semibold ${
+                  theme === "dark" ? "text-gray-300" : "text-gray-700"
+                }`}
+              >
                 Actions
               </th>
             </tr>
           </thead>
           <tbody>
-            {Object.entries(users).map(([key, user]) => {
-              if (!user) return null; // skip null users
+            {entries.map(([key, user]) => {
               const isAdmin = adminEmails.includes(user.email);
-
               return (
                 <tr
                   key={key}
@@ -351,203 +351,36 @@ const UserTable = ({ users, adminEmails, deleteUser, blockUser, theme }) => {
                       : "border-gray-200/50 hover:bg-gray-50/50"
                   }`}
                 >
-                  <td className="p-4">
-                    <div className="flex items-center gap-3">
-                      <div
-                        className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${
-                          isAdmin
-                            ? theme === "dark"
-                              ? "bg-red-500/20 text-red-400 border border-red-500/30"
-                              : "bg-red-100 text-red-600 border border-red-200"
-                            : theme === "dark"
-                            ? "bg-blue-500/20 text-blue-400 border border-blue-500/30"
-                            : "bg-blue-100 text-blue-600 border border-blue-200"
-                        }`}
+                  <td className="p-4">{user.email}</td>
+                  <td className="p-4">{isAdmin ? "Admin" : "Student"}</td>
+                  <td className="p-4">{user.block ? "Blocked" : "Active"}</td>
+                  <td className="p-4 flex gap-2">
+                    {!isAdmin && !user.block && (
+                      <button
+                        onClick={() => blockUser(key, user)}
+                        className="bg-orange-500 text-white px-3 py-1 rounded-lg"
                       >
-                        {user.email.charAt(0).toUpperCase()}
-                      </div>
-                      <span className="font-medium">{user.email}</span>
-                    </div>
-                  </td>
-                  <td className="p-4">
-                    {isAdmin ? (
-                      <span
-                        className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-semibold ${
-                          theme === "dark"
-                            ? "bg-red-500/20 text-red-400 border border-red-500/30"
-                            : "bg-red-100 text-red-700 border border-red-200"
-                        }`}
-                      >
-                        <Shield size={14} />
-                        Admin
-                      </span>
-                    ) : (
-                      <span
-                        className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-semibold ${
-                          theme === "dark"
-                            ? "bg-green-500/20 text-green-400 border border-green-500/30"
-                            : "bg-green-100 text-green-700 border border-green-200"
-                        }`}
-                      >
-                        <CheckCircle size={14} />
-                        Student
-                      </span>
+                        Block
+                      </button>
                     )}
-                  </td>
-                  <td className="p-4">
-                    {!isAdmin ? (
-                      <div className="flex flex-wrap gap-2">
-                        <button
-                          onClick={() => deleteUser(key)}
-                          className="group flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white text-sm font-medium rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
-                        >
-                          <Trash
-                            size={14}
-                            className="transition-transform group-hover:scale-110"
-                          />{" "}
-                          Delete
-                        </button>
-                        <button
-                          onClick={() =>
-                            blockUser(key, user.email, user.password)
-                          }
-                          className="group flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white text-sm font-medium rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
-                        >
-                          <Ban
-                            size={14}
-                            className="transition-transform group-hover:scale-110"
-                          />{" "}
-                          Block
-                        </button>
-                      </div>
-                    ) : (
-                      <span
-                        className={`text-sm ${
-                          theme === "dark" ? "text-gray-500" : "text-gray-400"
-                        }`}
+                    {!isAdmin && user.block && (
+                      <button
+                        onClick={() => unblockUser(key, user)}
+                        className="bg-green-500 text-white px-3 py-1 rounded-lg"
                       >
-                        Protected
-                      </span>
+                        Unblock
+                      </button>
                     )}
+                    <button
+                      onClick={() => deleteUser(key)}
+                      className="bg-red-500 text-white px-3 py-1 rounded-lg"
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               );
             })}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-};
-
-const BlockedTable = ({ blocked, unblockUser, theme }) => {
-  const blockedEntries = Object.entries(blocked).filter(([k, u]) => u); // skip null
-  return (
-    <div
-      className={`backdrop-blur-lg rounded-2xl shadow-xl border overflow-hidden ${
-        theme === "dark"
-          ? "bg-gray-800/60 border-gray-700/50"
-          : "bg-white/70 border-white/50"
-      }`}
-    >
-      <div className="p-6 border-b border-gray-200/20">
-        <div className="flex items-center gap-3">
-          <div
-            className={`p-2 rounded-lg ${
-              theme === "dark"
-                ? "bg-red-500/20 border border-red-500/30"
-                : "bg-red-100 border border-red-200"
-            }`}
-          >
-            <AlertTriangle
-              size={20}
-              className={theme === "dark" ? "text-red-400" : "text-red-600"}
-            />
-          </div>
-          <h2 className="text-xl font-bold text-red-600 dark:text-red-400">
-            Blocked Users
-          </h2>
-        </div>
-      </div>
-      <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead
-            className={`${
-              theme === "dark" ? "bg-gray-700/50" : "bg-gray-100/50"
-            }`}
-          >
-            <tr>
-              <th
-                className={`p-4 text-left font-semibold ${
-                  theme === "dark" ? "text-gray-300" : "text-gray-700"
-                }`}
-              >
-                Email
-              </th>
-              <th
-                className={`p-4 text-left font-semibold ${
-                  theme === "dark" ? "text-gray-300" : "text-gray-700"
-                }`}
-              >
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {blockedEntries.length === 0 ? (
-              <tr>
-                <td colSpan="2" className="p-8 text-center">
-                  <div
-                    className={`flex flex-col items-center gap-3 ${
-                      theme === "dark" ? "text-gray-500" : "text-gray-400"
-                    }`}
-                  >
-                    <CheckCircle size={32} />
-                    <span>No blocked users. All clear! 🎉</span>
-                  </div>
-                </td>
-              </tr>
-            ) : (
-              blockedEntries.map(([key, user]) => (
-                <tr
-                  key={key}
-                  className={`border-b transition-colors duration-200 ${
-                    theme === "dark"
-                      ? "border-gray-700/50 hover:bg-gray-700/30"
-                      : "border-gray-200/50 hover:bg-gray-50/50"
-                  }`}
-                >
-                  <td className="p-4">
-                    <div className="flex items-center gap-3">
-                      <div
-                        className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${
-                          theme === "dark"
-                            ? "bg-red-500/20 text-red-400 border border-red-500/30"
-                            : "bg-red-100 text-red-600 border border-red-200"
-                        }`}
-                      >
-                        {user.email.charAt(0).toUpperCase()}
-                      </div>
-                      <span className="font-medium">{user.email}</span>
-                    </div>
-                  </td>
-                  <td className="p-4">
-                    <button
-                      onClick={() =>
-                        unblockUser(key, user.email, user.password)
-                      }
-                      className="group flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white text-sm font-medium rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
-                    >
-                      <Undo
-                        size={14}
-                        className="transition-transform group-hover:scale-110"
-                      />
-                      Unblock
-                    </button>
-                  </td>
-                </tr>
-              ))
-            )}
           </tbody>
         </table>
       </div>

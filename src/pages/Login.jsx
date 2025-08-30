@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import bcrypt from "bcryptjs";
-import { Lock, Mail, User, Eye, EyeOff, Shield, UserPlus } from "lucide-react";
+import { Lock, Mail, Eye, EyeOff, Shield } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
 
 function Login() {
@@ -13,35 +13,22 @@ function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
     try {
-      const blockRes = await fetch(`${DATABASE_URL}/blocks.json`);
-      const blockData = (await blockRes.json()) || {};
-
-      const isBlocked = Object.values(blockData).some(
-        (u) => u?.email === email
-      );
-      if (isBlocked) {
-        alert(
-          "❌ You are blocked. Contact admin at sphsinghpharswan@gmail.com."
-        );
-        return;
-      }
-
       const res = await fetch(`${DATABASE_URL}/users.json`);
       if (!res.ok) throw new Error("Failed to fetch users");
+      const users = (await res.json()) || {};
 
-      const users = (await res.json()) || {}; 
+      const userEntry = Object.values(users).find(
+        (u) => u?.email?.trim().toLowerCase() === email.trim().toLowerCase()
+      );
 
-      if (Object.keys(users).length === 0) {
-        alert("⚠️ No users found. Please signup first.");
+      if (!userEntry) {
+        alert("⚠️ User not found. Please signup first.");
         return;
       }
 
-      const userEntry = Object.values(users).find((u) => u?.email === email);
-
-      if (!userEntry) {
-        alert("⚠️ User not found. Please signup with your credentials first.");
+      if (userEntry.block) {
+        alert("❌ You are blocked. Contact admin.");
         return;
       }
 
@@ -52,14 +39,13 @@ function Login() {
       }
 
       localStorage.setItem("user", JSON.stringify(userEntry));
-      alert("Login successful!");
+      alert("✅ Login successful!");
       navigate("/dashboard");
     } catch (err) {
       console.error("Login error:", err);
       alert("Login failed. Please try again.");
     }
   };
-
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 flex items-center justify-center p-4 transition-all duration-500">

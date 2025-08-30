@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import bcrypt from "bcryptjs";
-import { Lock, Mail, User, Eye, EyeOff, UserPlus } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
-
-
+import { Lock, Mail, Eye, EyeOff, Shield } from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
 
 function Signup() {
   const navigate = useNavigate();
@@ -15,98 +13,91 @@ function Signup() {
 
   const handleSignup = async (e) => {
     e.preventDefault();
-
     try {
-      const blockRes = await fetch(`${DATABASE_URL}/blocks.json`);
-      const blockData = (await blockRes.json()) || {}; 
-
-      const isBlocked = Object.values(blockData).some(
-        (u) => u?.email === email
-      );
-      if (isBlocked) {
-        alert("❌ You are blocked. Contact admin.");
-        return;
-      }
-
       const res = await fetch(`${DATABASE_URL}/users.json`);
-      const data = (await res.json()) || {};
+      if (!res.ok) throw new Error("Failed to fetch users");
+      const users = (await res.json()) || {};
 
-      const alreadyExists = Object.values(data).some((u) => u?.email === email);
-      if (alreadyExists) {
-        alert(
-          "⚠️ User already registered. Please login with your credentials."
-        );
+      // Check if email already exists
+      const existingUser = Object.values(users).find(
+        (u) => u?.email?.trim().toLowerCase() === email.trim().toLowerCase()
+      );
+
+      if (existingUser) {
+        if (existingUser.block) {
+          alert("❌ You are blocked. Cannot signup.");
+          return;
+        }
+        alert("⚠️ Email already registered. Please login.");
         return;
       }
 
+      // Hash password
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      const nextIndex = Object.keys(data).length;
+      const newUser = { email, password: hashedPassword, block: false };
 
-      await fetch(`${DATABASE_URL}/users/${nextIndex}.json`, {
-        method: "PUT",
+      await fetch(`${DATABASE_URL}/users.json`, {
+        method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email,
-          password: hashedPassword,
-        }),
+        body: JSON.stringify(newUser),
       });
 
-      alert("✅ Signup successful! Please login.");
-      navigate("/login");
+      localStorage.setItem("user", JSON.stringify(newUser));
+      alert("✅ Signup successful!");
+      navigate("/dashboard");
     } catch (err) {
       console.error("Signup error:", err);
-      alert("Error signing up. Try again.");
+      alert("Signup failed. Please try again.");
     }
   };
 
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 flex items-center justify-center p-4 transition-all duration-500">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 flex items-center justify-center p-4 transition-all duration-500">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-green-400/10 dark:bg-green-500/5 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-emerald-400/10 dark:bg-emerald-500/5 rounded-full blur-3xl"></div>
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-400/10 dark:bg-blue-500/5 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-indigo-400/10 dark:bg-indigo-500/5 rounded-full blur-3xl"></div>
       </div>
 
       <div className="relative z-10 w-full max-w-md">
         <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-white/20 dark:border-slate-700/50 p-8 rounded-3xl shadow-2xl">
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 dark:from-green-400 dark:to-emerald-500 rounded-2xl shadow-xl mb-4">
-              <UserPlus className="text-white" size={32} />
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 dark:from-blue-400 dark:to-indigo-500 rounded-2xl shadow-xl mb-4">
+              <Shield className="text-white" size={32} />
             </div>
-            <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-800 to-green-800 dark:from-slate-100 dark:to-green-300 bg-clip-text text-transparent">
+            <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-800 to-blue-800 dark:from-slate-100 dark:to-blue-300 bg-clip-text text-transparent">
               Create Account
             </h2>
             <p className="text-gray-600 dark:text-slate-400 mt-2 font-medium">
-              Join us and start learning
+              Signup to access the dashboard
             </p>
           </div>
 
           <form onSubmit={handleSignup} className="space-y-6">
             <div className="relative group">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <Mail className="h-5 w-5 text-gray-400 dark:text-slate-500 group-focus-within:text-green-500 dark:group-focus-within:text-green-400 transition-colors" />
+                <Mail className="h-5 w-5 text-gray-400 dark:text-slate-500 group-focus-within:text-blue-500 dark:group-focus-within:text-blue-400 transition-colors" />
               </div>
               <input
                 type="email"
                 placeholder="Email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 bg-gray-50/50 dark:bg-slate-700/50 border border-gray-200 dark:border-slate-600 rounded-2xl focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 dark:focus:border-green-400 transition-all duration-300 text-gray-900 dark:text-slate-100 placeholder-gray-500 dark:placeholder-slate-400"
+                className="w-full pl-12 pr-4 py-4 bg-gray-50/50 dark:bg-slate-700/50 border border-gray-200 dark:border-slate-600 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 dark:focus:border-blue-400 transition-all duration-300 text-gray-900 dark:text-slate-100 placeholder-gray-500 dark:placeholder-slate-400"
                 required
               />
             </div>
 
             <div className="relative group">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <Lock className="h-5 w-5 text-gray-400 dark:text-slate-500 group-focus-within:text-green-500 dark:group-focus-within:text-green-400 transition-colors" />
+                <Lock className="h-5 w-5 text-gray-400 dark:text-slate-500 group-focus-within:text-blue-500 dark:group-focus-within:text-blue-400 transition-colors" />
               </div>
               <input
                 type={showPassword ? "text" : "password"}
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-12 pr-12 py-4 bg-gray-50/50 dark:bg-slate-700/50 border border-gray-200 dark:border-slate-600 rounded-2xl focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 dark:focus:border-green-400 transition-all duration-300 text-gray-900 dark:text-slate-100 placeholder-gray-500 dark:placeholder-slate-400"
+                className="w-full pl-12 pr-12 py-4 bg-gray-50/50 dark:bg-slate-700/50 border border-gray-200 dark:border-slate-600 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 dark:focus:border-blue-400 transition-all duration-300 text-gray-900 dark:text-slate-100 placeholder-gray-500 dark:placeholder-slate-400"
                 required
               />
               <button
@@ -120,9 +111,9 @@ function Signup() {
 
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-500 dark:to-emerald-500 text-white py-4 rounded-2xl font-semibold text-lg shadow-xl hover:from-green-700 hover:to-emerald-700 dark:hover:from-green-600 dark:hover:to-emerald-600 transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-2xl"
+              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-500 dark:to-indigo-500 text-white py-4 rounded-2xl font-semibold text-lg shadow-xl hover:from-blue-700 hover:to-indigo-700 dark:hover:from-blue-600 dark:hover:to-indigo-600 transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-2xl"
             >
-              Create Account
+              Sign Up
             </button>
           </form>
 
@@ -134,7 +125,7 @@ function Signup() {
               to="/login"
               className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-semibold transition-colors duration-200 hover:underline"
             >
-              Login
+              Login here
             </Link>
           </div>
         </div>
