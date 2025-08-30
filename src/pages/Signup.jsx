@@ -18,36 +18,33 @@ function Signup() {
 
     try {
       const blockRes = await fetch(`${DATABASE_URL}/blocks.json`);
-      const blockData = await blockRes.json();
+      const blockData = (await blockRes.json()) || {}; // Default to empty object
 
-      if (blockData) {
-        const isBlocked = Object.values(blockData).some(
-          (u) => u.email === email
-        );
-        if (isBlocked) {
-          alert("❌ You are blocked. Contact admin.");
-          return;
-        }
+      const isBlocked = Object.values(blockData).some(
+        (u) => u?.email === email
+      );
+      if (isBlocked) {
+        alert("❌ You are blocked. Contact admin.");
+        return;
       }
 
+      // Fetch existing users
       const res = await fetch(`${DATABASE_URL}/users.json`);
-      const data = await res.json();
+      const data = (await res.json()) || {}; // Default to empty object
 
-      if (data) {
-        const alreadyExists = Object.values(data).some(
-          (u) => u.email === email
+      const alreadyExists = Object.values(data).some((u) => u?.email === email);
+      if (alreadyExists) {
+        alert(
+          "⚠️ User already registered. Please login with your credentials."
         );
-        if (alreadyExists) {
-          alert(
-            "⚠️ User already registered. Please login with your credentials."
-          );
-          return;
-        }
+        return;
       }
 
+      // Hash password
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      const nextIndex = data ? Object.keys(data).length : 0;
+      // Generate next index (for Firebase)
+      const nextIndex = Object.keys(data).length;
 
       await fetch(`${DATABASE_URL}/users/${nextIndex}.json`, {
         method: "PUT",
@@ -65,6 +62,7 @@ function Signup() {
       alert("Error signing up. Try again.");
     }
   };
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 flex items-center justify-center p-4 transition-all duration-500">

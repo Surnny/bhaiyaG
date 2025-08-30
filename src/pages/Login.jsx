@@ -15,31 +15,32 @@ function Login() {
     e.preventDefault();
 
     try {
+      // Fetch blocked users
       const blockRes = await fetch(`${DATABASE_URL}/blocks.json`);
-      const blockData = await blockRes.json();
+      const blockData = (await blockRes.json()) || {}; // Default to empty object
 
-      if (blockData) {
-        const isBlocked = Object.values(blockData).some(
-          (u) => u.email === email
+      const isBlocked = Object.values(blockData).some(
+        (u) => u?.email === email
+      );
+      if (isBlocked) {
+        alert(
+          "❌ You are blocked. Contact admin at sphsinghpharswan@gmail.com."
         );
-        if (isBlocked) {
-          alert(
-            "❌ You are blocked. Contact admin at sphsinghpharswan@gmail.com."
-          );
-          return;
-        }
+        return;
       }
 
+      // Fetch all users
       const res = await fetch(`${DATABASE_URL}/users.json`);
       if (!res.ok) throw new Error("Failed to fetch users");
 
-      const users = await res.json();
-      if (!users) {
+      const users = (await res.json()) || {}; // Default to empty object
+
+      if (Object.keys(users).length === 0) {
         alert("⚠️ No users found. Please signup first.");
         return;
       }
 
-      const userEntry = Object.values(users).find((u) => u.email === email);
+      const userEntry = Object.values(users).find((u) => u?.email === email);
 
       if (!userEntry) {
         alert("⚠️ User not found. Please signup with your credentials first.");
@@ -53,14 +54,14 @@ function Login() {
       }
 
       localStorage.setItem("user", JSON.stringify(userEntry));
-
       alert("Login successful!");
-      navigate("/dashboard"); 
+      navigate("/dashboard");
     } catch (err) {
       console.error("Login error:", err);
       alert("Login failed. Please try again.");
     }
   };
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 flex items-center justify-center p-4 transition-all duration-500">
