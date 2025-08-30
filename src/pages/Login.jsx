@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import bcrypt from "bcryptjs";
 import { Lock, Mail, User, Eye, EyeOff, Shield, UserPlus } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 function Login() {
   const navigate = useNavigate();
@@ -131,12 +131,12 @@ function Login() {
             <p className="text-gray-600 dark:text-slate-400 mb-2">
               Don't have an account?
             </p>
-            <button
+            <Link
+              to="/signup"
               className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-semibold transition-colors duration-200 hover:underline"
-              onClick={() => (window.location.href = "/signup")}
             >
               Create new account
-            </button>
+            </Link>
           </div>
         </div>
       </div>

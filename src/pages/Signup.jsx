@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import bcrypt from "bcryptjs";
 import { Lock, Mail, User, Eye, EyeOff, UserPlus } from "lucide-react";
+import { Link } from "react-router-dom";
+
 
 function Signup() {
   const [email, setEmail] = useState("");
@@ -131,12 +133,12 @@ function Signup() {
             <p className="text-gray-600 dark:text-slate-400 mb-2">
               Already have an account?
             </p>
-            <button
-              className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 font-semibold transition-colors duration-200 hover:underline"
-              onClick={() => (window.location.href = "/login")}
+            <Link
+              to="/login"
+              className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-semibold transition-colors duration-200 hover:underline"
             >
-              Sign in here
-            </button>
+              Login
+            </Link>
           </div>
         </div>
       </div>

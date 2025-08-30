@@ -7,7 +7,7 @@ import {
   ExternalLink,
   Library,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 
 function Books() {
