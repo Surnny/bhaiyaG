@@ -1,4 +1,3 @@
-// src/pages/Videos.jsx
 import React, { useState, useEffect } from "react";
 import { Plus, Trash, ArrowLeft, Play, BookOpen, Video } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -16,7 +15,6 @@ function Videos() {
   const [selectedClass, setSelectedClass] = useState(null);
   const classes = ["class7", "class8", "class9", "class10"];
 
-  // Fetch videos on load
   useEffect(() => {
     fetch(`${DATABASE_URL}/videos.json`)
       .then((res) => res.json())
@@ -25,7 +23,6 @@ function Videos() {
       });
   }, []);
 
-  // Normalize YouTube link
   const normalizeYouTubeUrl = (input) => {
     if (!input) return "";
     const iframeMatch = input.match(/src="([^"]+)"/);
@@ -41,7 +38,6 @@ function Videos() {
     return input;
   };
 
-  // Add new video
   const addVideo = async () => {
     const title = prompt("Enter video title:");
     const urlInput = prompt("Paste YouTube link or iframe code:");
@@ -61,7 +57,6 @@ function Videos() {
     });
   };
 
-  // Delete video
   const deleteVideo = async (index) => {
     const updated = videos[selectedClass].filter((_, i) => i !== index);
     setVideos((prev) => ({ ...prev, [selectedClass]: updated }));
@@ -117,7 +112,6 @@ function Videos() {
           )}
         </div>
 
-        {/* Class Selection */}
         {!selectedClass ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
             {classes.map((cls, index) => (
@@ -142,9 +136,7 @@ function Videos() {
             ))}
           </div>
         ) : (
-          // Videos List for Selected Class
           <div className="space-y-6">
-            {/* Stats Header */}
             <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-xl border border-gray-100 dark:border-slate-700">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -167,7 +159,6 @@ function Videos() {
               </div>
             </div>
 
-            {/* Videos Grid */}
             {!videos[selectedClass] || videos[selectedClass].length === 0 ? (
               <div className="text-center py-16">
                 <div className="p-6 bg-purple-100 dark:bg-purple-900 rounded-full w-24 h-24 mx-auto mb-6 flex items-center justify-center">
@@ -199,7 +190,6 @@ function Videos() {
                     key={index}
                     className="group bg-white dark:bg-slate-800 shadow-xl rounded-3xl overflow-hidden border border-gray-100 dark:border-slate-700 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
                   >
-                    {/* Video Container */}
                     <div className="relative">
                       <div className="aspect-video rounded-t-3xl overflow-hidden bg-gray-100 dark:bg-slate-700">
                         <iframe
@@ -212,7 +202,6 @@ function Videos() {
                         ></iframe>
                       </div>
 
-                      {/* Play overlay for better visual indication */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-t-3xl">
                         <div className="absolute bottom-4 left-4">
                           <div className="p-2 bg-white/90 dark:bg-slate-800/90 rounded-full shadow-lg backdrop-blur-sm">
@@ -225,7 +214,6 @@ function Videos() {
                       </div>
                     </div>
 
-                    {/* Content */}
                     <div className="p-6">
                       <h2 className="text-xl font-bold text-gray-800 dark:text-slate-200 mb-3 line-clamp-2 leading-tight">
                         {video.title}

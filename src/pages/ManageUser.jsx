@@ -24,7 +24,6 @@ function ManageUsers() {
     "sphsinghpharswan@gmail.com",
   ];
 
-  // Fetch users & blocked users
   useEffect(() => {
     fetch(`${DATABASE_URL}/users.json`)
       .then((res) => res.json())
@@ -35,7 +34,6 @@ function ManageUsers() {
       .then((data) => setBlocked(data || {}));
   }, []);
 
-  // Delete User
   const deleteUser = async (key) => {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
 
@@ -45,7 +43,6 @@ function ManageUsers() {
     setUsers(updated);
   };
 
-  // Block User
   const blockUser = async (key, email, password) => {
     if (!window.confirm("Are you sure you want to block this user?")) return;
 
@@ -64,7 +61,6 @@ function ManageUsers() {
     setBlocked((prev) => ({ ...prev, [key]: { email, password } }));
   };
 
-  // Unblock User
   const unblockUser = async (key, email, password) => {
     if (!window.confirm("Unblock this user? They will regain access.")) return;
 
@@ -98,7 +94,6 @@ function ManageUsers() {
           : "bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 text-gray-900"
       }`}
     >
-      {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div
           className={`absolute top-20 left-10 w-32 h-32 rounded-full blur-3xl opacity-20 ${
@@ -118,7 +113,6 @@ function ManageUsers() {
       </div>
 
       <div className="relative z-10 p-6 lg:p-8">
-        {/* Header Section */}
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-6">
           <div className="flex items-center gap-6">
             <button
@@ -162,7 +156,6 @@ function ManageUsers() {
           </div>
         </div>
 
-        {/* Stats Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <div
             className={`backdrop-blur-lg rounded-2xl p-6 shadow-xl border transition-all duration-300 hover:shadow-2xl ${
@@ -311,7 +304,6 @@ function ManageUsers() {
           </div>
         </div>
 
-        {/* Active Users Table */}
         <div
           className={`backdrop-blur-lg rounded-2xl shadow-xl border mb-8 overflow-hidden ${
             theme === "dark"
@@ -478,7 +470,6 @@ function ManageUsers() {
           </div>
         </div>
 
-        {/* Blocked Users Table */}
         <div
           className={`backdrop-blur-lg rounded-2xl shadow-xl border overflow-hidden ${
             theme === "dark"

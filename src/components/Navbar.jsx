@@ -14,7 +14,6 @@ function Navbar({ onLogout }) {
           : "bg-white/95 border-gray-200/50 text-gray-900"
       }`}
     >
-      {/* Gradient overlay for depth */}
       <div
         className={`absolute inset-0 ${
           theme === "dark"
@@ -25,14 +24,12 @@ function Navbar({ onLogout }) {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Left: Logo */}
           <div className="flex-shrink-0">
             <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent hover:scale-105 transition-transform duration-300 cursor-pointer">
               BhaiyaG
             </div>
           </div>
 
-          {/* Center: Nav Links or Welcome Message */}
           <div className="flex-1 flex justify-center px-4">
             {!user ? (
               <div
@@ -99,9 +96,7 @@ function Navbar({ onLogout }) {
             )}
           </div>
 
-          {/* Right: Theme toggle + User */}
           <div className="flex items-center space-x-3">
-            {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
               className={`group relative p-3 rounded-full shadow-lg backdrop-blur-sm border transition-all duration-300 hover:scale-110 hover:shadow-xl ${
@@ -123,7 +118,6 @@ function Navbar({ onLogout }) {
                   />
                 )}
               </div>
-              {/* Glow effect */}
               <div
                 className={`absolute inset-0 rounded-full blur-md opacity-30 transition-opacity group-hover:opacity-50 ${
                   theme === "dark" ? "bg-yellow-400" : "bg-indigo-600"
@@ -133,7 +127,6 @@ function Navbar({ onLogout }) {
 
             {user ? (
               <div className="flex items-center space-x-3">
-                {/* User Info */}
                 <div
                   className={`group flex items-center gap-3 px-4 py-2 rounded-xl shadow-lg backdrop-blur-sm border transition-all duration-300 hover:scale-105 ${
                     theme === "dark"
@@ -159,7 +152,6 @@ function Navbar({ onLogout }) {
                   </span>
                 </div>
 
-                {/* Logout Button */}
                 <button
                   onClick={onLogout}
                   className="group flex items-center gap-2 px-4 py-2 rounded-xl font-medium shadow-lg bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white transition-all duration-300 hover:scale-105 hover:shadow-xl"
@@ -177,7 +169,6 @@ function Navbar({ onLogout }) {
           </div>
         </div>
 
-        {/* Mobile Navigation (when user is logged in) */}
         {user && (
           <div className="md:hidden border-t border-gray-200/20 pt-2 pb-2">
             <div className="flex justify-center space-x-1">

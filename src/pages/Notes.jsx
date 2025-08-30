@@ -15,7 +15,6 @@ function Notes() {
   const [notes, setNotes] = useState({});
   const classes = ["class7", "class8", "class9", "class10"];
 
-  // Fetch notes on load
   useEffect(() => {
     fetch(`${DATABASE_URL}/notes.json`)
       .then((res) => res.json())
@@ -24,7 +23,6 @@ function Notes() {
       });
   }, []);
 
-  // Add new note (Admin only)
   const addNote = async (type) => {
     const title = prompt("Enter note title:");
     const url = prompt("Paste Google Drive link:");
@@ -43,7 +41,6 @@ function Notes() {
     });
   };
 
-  // Delete note (Admin only)
   const deleteNote = async (type, index) => {
     const updated = notes[selectedClass][type].filter((_, i) => i !== index);
 
@@ -58,7 +55,6 @@ function Notes() {
     });
   };
 
-  // Reusable Section Component
   const NotesSection = ({ title, type, data, icon: Icon }) => (
     <div className="mb-8 p-6 bg-white dark:bg-slate-800 shadow-xl rounded-3xl border border-gray-100 dark:border-slate-700 hover:shadow-2xl transition-all duration-300 backdrop-blur-sm">
       <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 mb-6">
@@ -124,7 +120,6 @@ function Notes() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 transition-all duration-500">
       <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
-        {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8">
           <h1 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-gray-800 to-blue-800 dark:from-slate-100 dark:to-blue-300 bg-clip-text text-transparent flex items-center gap-4">
             <div className="p-3 bg-gradient-to-br from-blue-500 to-indigo-600 dark:from-blue-400 dark:to-indigo-500 rounded-2xl shadow-xl">
@@ -141,7 +136,6 @@ function Notes() {
           </button>
         </div>
 
-        {/* Class Selection */}
         {!selectedClass ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
             {classes.map((cls, index) => (
@@ -164,7 +158,6 @@ function Notes() {
           </div>
         ) : (
           <>
-            {/* Back to Class Selection */}
             <div className="flex items-center justify-between mb-8">
               <button
                 onClick={() => setSelectedClass(null)}
@@ -184,7 +177,6 @@ function Notes() {
               </div>
             </div>
 
-            {/* Notes Sections */}
             <div className="space-y-8">
               <NotesSection
                 title="Detail Notes"

@@ -22,7 +22,6 @@ function Books() {
 
   const [books, setBooks] = useState([]);
 
-  // Fetch books on load
   useEffect(() => {
     fetch(`${DATABASE_URL}/books.json`)
       .then((res) => res.json())
@@ -31,7 +30,6 @@ function Books() {
       });
   }, []);
 
-  // Add new book (Admin only)
   const addBook = async () => {
     const title = prompt("Enter book title:");
     const url = prompt("Paste link (Google Drive / PDF / Website):");
@@ -46,7 +44,6 @@ function Books() {
     });
   };
 
-  // Delete book (Admin only)
   const deleteBook = async (index) => {
     const updated = books.filter((_, i) => i !== index);
     setBooks(updated);
@@ -65,7 +62,6 @@ function Books() {
           : "bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 text-gray-900"
       }`}
     >
-      {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div
           className={`absolute top-20 left-10 w-32 h-32 rounded-full blur-3xl opacity-20 ${
@@ -85,7 +81,6 @@ function Books() {
       </div>
 
       <div className="relative z-10 p-6 lg:p-8">
-        {/* Header Section */}
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-6">
           <div className="flex items-center gap-6">
             <button
@@ -142,7 +137,6 @@ function Books() {
           )}
         </div>
 
-        {/* Stats Card */}
         <div
           className={`backdrop-blur-lg rounded-2xl p-6 shadow-xl border mb-8 ${
             theme === "dark"
@@ -181,7 +175,6 @@ function Books() {
           </div>
         </div>
 
-        {/* Books List */}
         {books.length === 0 ? (
           <div
             className={`text-center py-16 backdrop-blur-lg rounded-2xl shadow-xl border ${

@@ -13,7 +13,6 @@ function Signup() {
     e.preventDefault();
 
     try {
-      // 🔹 Step 1: Check if user is blocked
       const blockRes = await fetch(`${DATABASE_URL}/blocks.json`);
       const blockData = await blockRes.json();
 
@@ -27,7 +26,6 @@ function Signup() {
         }
       }
 
-      // 🔹 Step 2: Check if email is already registered
       const res = await fetch(`${DATABASE_URL}/users.json`);
       const data = await res.json();
 
@@ -43,13 +41,10 @@ function Signup() {
         }
       }
 
-      // 🔹 Step 3: Hash password
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      // 🔹 Step 4: Find next index for new user
       const nextIndex = data ? Object.keys(data).length : 0;
 
-      // 🔹 Step 5: Save new user to Firebase
       await fetch(`${DATABASE_URL}/users/${nextIndex}.json`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -69,7 +64,6 @@ function Signup() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 flex items-center justify-center p-4 transition-all duration-500">
-      {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-green-400/10 dark:bg-green-500/5 rounded-full blur-3xl"></div>
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-emerald-400/10 dark:bg-emerald-500/5 rounded-full blur-3xl"></div>
@@ -77,7 +71,6 @@ function Signup() {
 
       <div className="relative z-10 w-full max-w-md">
         <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-white/20 dark:border-slate-700/50 p-8 rounded-3xl shadow-2xl">
-          {/* Header */}
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 dark:from-green-400 dark:to-emerald-500 rounded-2xl shadow-xl mb-4">
               <UserPlus className="text-white" size={32} />
@@ -91,7 +84,6 @@ function Signup() {
           </div>
 
           <form onSubmit={handleSignup} className="space-y-6">
-            {/* Email Input */}
             <div className="relative group">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <Mail className="h-5 w-5 text-gray-400 dark:text-slate-500 group-focus-within:text-green-500 dark:group-focus-within:text-green-400 transition-colors" />
@@ -106,7 +98,6 @@ function Signup() {
               />
             </div>
 
-            {/* Password Input */}
             <div className="relative group">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <Lock className="h-5 w-5 text-gray-400 dark:text-slate-500 group-focus-within:text-green-500 dark:group-focus-within:text-green-400 transition-colors" />
@@ -128,7 +119,6 @@ function Signup() {
               </button>
             </div>
 
-            {/* Submit Button */}
             <button
               type="submit"
               className="w-full bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-500 dark:to-emerald-500 text-white py-4 rounded-2xl font-semibold text-lg shadow-xl hover:from-green-700 hover:to-emerald-700 dark:hover:from-green-600 dark:hover:to-emerald-600 transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-2xl"
@@ -137,7 +127,6 @@ function Signup() {
             </button>
           </form>
 
-          {/* Login Link */}
           <div className="mt-8 text-center">
             <p className="text-gray-600 dark:text-slate-400 mb-2">
               Already have an account?

@@ -12,12 +12,10 @@ import {
 import { useTheme } from "../context/ThemeContext";
 
 function Dashboard() {
-  // Get user from localStorage
   const user = JSON.parse(localStorage.getItem("user"));
-  const [showPopup, setShowPopup] = useState(true); // show popup initially
+  const [showPopup, setShowPopup] = useState(true);
   const { theme } = useTheme();
 
-  // Check if logged-in user is admin
   const isAdmin =
     user?.email === "ayush25.kandari@gmail.com" ||
     user?.email === "sphsinghpharswan@gmail.com";
@@ -30,7 +28,6 @@ function Dashboard() {
           : "bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50"
       }`}
     >
-      {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div
           className={`absolute top-20 left-20 w-72 h-72 rounded-full blur-3xl opacity-20 animate-pulse ${
@@ -54,7 +51,6 @@ function Dashboard() {
         ></div>
       </div>
 
-      {/* ===== Welcome Popup ===== */}
       {showPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-md z-50 animate-fadeIn">
           <div
@@ -64,7 +60,6 @@ function Dashboard() {
                 : "bg-white/90 border-white/50"
             }`}
           >
-            {/* Popup Background Effect */}
             <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-indigo-500/10"></div>
 
             <button
@@ -119,9 +114,7 @@ function Dashboard() {
         </div>
       )}
 
-      {/* ===== Main Content ===== */}
       <div className="relative z-10 p-6 lg:p-8">
-        {/* Welcome Header */}
         <div className="mb-12 text-center lg:text-left">
           <h1 className="text-4xl lg:text-5xl font-bold mb-4">
             <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
@@ -145,7 +138,6 @@ function Dashboard() {
           </p>
         </div>
 
-        {/* User Features */}
         <div className="mb-12">
           <div className="flex items-center gap-4 mb-8">
             <div
@@ -287,7 +279,6 @@ function Dashboard() {
           </div>
         </div>
 
-        {/* Admin-only Features */}
         {isAdmin && (
           <div>
             <div className="flex items-center gap-4 mb-8">

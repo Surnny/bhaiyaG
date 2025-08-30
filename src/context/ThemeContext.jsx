@@ -1,4 +1,3 @@
-// src/context/ThemeContext.jsx
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 const ThemeContext = createContext();
@@ -6,7 +5,6 @@ const ThemeContext = createContext();
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState("light");
 
-  // Load saved theme or system preference
   useEffect(() => {
     const saved = localStorage.getItem("theme");
     if (saved) {
@@ -19,7 +17,6 @@ export function ThemeProvider({ children }) {
     }
   }, []);
 
-  // Apply theme to <html>
   useEffect(() => {
     if (theme === "dark") {
       document.documentElement.classList.add("dark");

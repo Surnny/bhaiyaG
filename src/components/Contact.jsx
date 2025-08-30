@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { ArrowLeft, Mail, Phone, MessageSquare, Send } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useTheme } from "../context/ThemeContext"; // ✅ import theme hook
+import { useTheme } from "../context/ThemeContext";
 
 function Contact() {
   const navigate = useNavigate();
-  const { theme } = useTheme(); // ✅ get current theme
+  const { theme } = useTheme(); 
   const [form, setForm] = useState({ name: "", email: "", message: "" });
 
   const handleChange = (e) => {
@@ -26,7 +26,6 @@ function Contact() {
           : "bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 text-gray-900"
       }`}
     >
-      {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div
           className={`absolute top-20 left-10 w-32 h-32 rounded-full blur-3xl opacity-20 ${
@@ -46,7 +45,6 @@ function Contact() {
       </div>
 
       <div className="relative z-10 p-4 sm:p-6 lg:p-8">
-        {/* Back Button */}
         <button
           onClick={() => navigate("/dashboard")}
           className={`group flex items-center gap-3 mb-8 px-6 py-3 rounded-xl font-medium shadow-lg backdrop-blur-sm transition-all duration-300 transform hover:scale-105 hover:shadow-xl ${
@@ -62,7 +60,6 @@ function Contact() {
           Back to Dashboard
         </button>
 
-        {/* Header Section */}
         <div className="text-center mb-12">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4">
             <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
@@ -79,9 +76,7 @@ function Contact() {
           </p>
         </div>
 
-        {/* Main Content Grid */}
         <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-start">
-          {/* Contact Form */}
           <div
             className={`backdrop-blur-lg rounded-2xl p-8 shadow-2xl border transition-all duration-300 hover:shadow-3xl ${
               theme === "dark"
@@ -174,7 +169,6 @@ function Contact() {
             </form>
           </div>
 
-          {/* Contact Information */}
           <div className="space-y-6">
             <div
               className={`backdrop-blur-lg rounded-2xl p-8 shadow-2xl border transition-all duration-300 hover:shadow-3xl ${
@@ -282,7 +276,6 @@ function Contact() {
               </div>
             </div>
 
-            {/* Additional Info Card */}
             <div
               className={`backdrop-blur-lg rounded-2xl p-6 shadow-2xl border transition-all duration-300 hover:shadow-3xl ${
                 theme === "dark"

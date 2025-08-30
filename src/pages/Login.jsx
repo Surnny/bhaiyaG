@@ -13,7 +13,6 @@ function Login() {
     e.preventDefault();
 
     try {
-      // 🔹 First check if user is blocked
       const blockRes = await fetch(`${DATABASE_URL}/blocks.json`);
       const blockData = await blockRes.json();
 
@@ -29,7 +28,6 @@ function Login() {
         }
       }
 
-      // 🔹 Fetch users
       const res = await fetch(`${DATABASE_URL}/users.json`);
       if (!res.ok) throw new Error("Failed to fetch users");
 
@@ -39,7 +37,6 @@ function Login() {
         return;
       }
 
-      // Find user by email
       const userEntry = Object.values(users).find((u) => u.email === email);
 
       if (!userEntry) {
@@ -47,17 +44,14 @@ function Login() {
         return;
       }
 
-      // Compare password
       const match = await bcrypt.compare(password, userEntry.password);
       if (!match) {
         alert("Wrong credentials");
         return;
       }
 
-      // Save user in localStorage
       localStorage.setItem("user", JSON.stringify(userEntry));
 
-      // Redirect to dashboard
       alert("Login successful!");
       window.location.href = "/dashboard";
     } catch (err) {
@@ -68,7 +62,6 @@ function Login() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 flex items-center justify-center p-4 transition-all duration-500">
-      {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-400/10 dark:bg-blue-500/5 rounded-full blur-3xl"></div>
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-indigo-400/10 dark:bg-indigo-500/5 rounded-full blur-3xl"></div>
@@ -76,7 +69,6 @@ function Login() {
 
       <div className="relative z-10 w-full max-w-md">
         <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-white/20 dark:border-slate-700/50 p-8 rounded-3xl shadow-2xl">
-          {/* Header */}
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 dark:from-blue-400 dark:to-indigo-500 rounded-2xl shadow-xl mb-4">
               <Shield className="text-white" size={32} />
@@ -90,7 +82,6 @@ function Login() {
           </div>
 
           <form onSubmit={handleLogin} className="space-y-6">
-            {/* Email Input */}
             <div className="relative group">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <Mail className="h-5 w-5 text-gray-400 dark:text-slate-500 group-focus-within:text-blue-500 dark:group-focus-within:text-blue-400 transition-colors" />
@@ -105,7 +96,6 @@ function Login() {
               />
             </div>
 
-            {/* Password Input */}
             <div className="relative group">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <Lock className="h-5 w-5 text-gray-400 dark:text-slate-500 group-focus-within:text-blue-500 dark:group-focus-within:text-blue-400 transition-colors" />
@@ -127,7 +117,6 @@ function Login() {
               </button>
             </div>
 
-            {/* Submit Button */}
             <button
               type="submit"
               className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-500 dark:to-indigo-500 text-white py-4 rounded-2xl font-semibold text-lg shadow-xl hover:from-blue-700 hover:to-indigo-700 dark:hover:from-blue-600 dark:hover:to-indigo-600 transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-2xl"
@@ -136,7 +125,6 @@ function Login() {
             </button>
           </form>
 
-          {/* Signup Link */}
           <div className="mt-8 text-center">
             <p className="text-gray-600 dark:text-slate-400 mb-2">
               Don't have an account?
