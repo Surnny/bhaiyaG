@@ -15,9 +15,8 @@ function Login() {
     e.preventDefault();
 
     try {
-      // Fetch blocked users
       const blockRes = await fetch(`${DATABASE_URL}/blocks.json`);
-      const blockData = (await blockRes.json()) || {}; // Default to empty object
+      const blockData = (await blockRes.json()) || {};
 
       const isBlocked = Object.values(blockData).some(
         (u) => u?.email === email
@@ -29,11 +28,10 @@ function Login() {
         return;
       }
 
-      // Fetch all users
       const res = await fetch(`${DATABASE_URL}/users.json`);
       if (!res.ok) throw new Error("Failed to fetch users");
 
-      const users = (await res.json()) || {}; // Default to empty object
+      const users = (await res.json()) || {}; 
 
       if (Object.keys(users).length === 0) {
         alert("⚠️ No users found. Please signup first.");

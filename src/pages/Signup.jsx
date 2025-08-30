@@ -18,7 +18,7 @@ function Signup() {
 
     try {
       const blockRes = await fetch(`${DATABASE_URL}/blocks.json`);
-      const blockData = (await blockRes.json()) || {}; // Default to empty object
+      const blockData = (await blockRes.json()) || {}; 
 
       const isBlocked = Object.values(blockData).some(
         (u) => u?.email === email
@@ -28,9 +28,8 @@ function Signup() {
         return;
       }
 
-      // Fetch existing users
       const res = await fetch(`${DATABASE_URL}/users.json`);
-      const data = (await res.json()) || {}; // Default to empty object
+      const data = (await res.json()) || {};
 
       const alreadyExists = Object.values(data).some((u) => u?.email === email);
       if (alreadyExists) {
@@ -40,10 +39,8 @@ function Signup() {
         return;
       }
 
-      // Hash password
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      // Generate next index (for Firebase)
       const nextIndex = Object.keys(data).length;
 
       await fetch(`${DATABASE_URL}/users/${nextIndex}.json`, {
