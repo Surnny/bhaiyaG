@@ -247,7 +247,7 @@ function Contact() {
                         theme === "dark" ? "text-gray-400" : "text-gray-600"
                       }`}
                     >
-                      +91 8864975281
+                      +91 7889844597
                     </p>
                   </div>
                 </div>
