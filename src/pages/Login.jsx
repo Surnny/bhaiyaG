@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import bcrypt from "bcryptjs";
 import { Lock, Mail, User, Eye, EyeOff, Shield, UserPlus } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -53,7 +55,7 @@ function Login() {
       localStorage.setItem("user", JSON.stringify(userEntry));
 
       alert("Login successful!");
-      window.location.href = "/dashboard";
+      navigate("/dashboard"); 
     } catch (err) {
       console.error("Login error:", err);
       alert("Login failed. Please try again.");
