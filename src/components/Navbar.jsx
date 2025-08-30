@@ -1,10 +1,18 @@
 import { User, LogOut, Home, Phone, Sun, Moon, Info } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
+import { useNavigate } from "react-router-dom";
 
-function Navbar({ onLogout }) {
+
+function Navbar() {
   const user = JSON.parse(localStorage.getItem("user"));
   const { theme, toggleTheme } = useTheme();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    navigate("/login"); 
+  };
 
   return (
     <nav
@@ -153,7 +161,7 @@ function Navbar({ onLogout }) {
                 </div>
 
                 <button
-                  onClick={onLogout}
+                  onClick={handleLogout}
                   className="group flex items-center gap-2 px-4 py-2 rounded-xl font-medium shadow-lg bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white transition-all duration-300 hover:scale-105 hover:shadow-xl"
                 >
                   <LogOut

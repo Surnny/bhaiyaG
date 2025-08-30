@@ -13,6 +13,7 @@ import { useTheme } from "../context/ThemeContext";
 
 function Dashboard() {
   const user = JSON.parse(localStorage.getItem("user"));
+  if (!user) return <Navigate to="/login" />;
   const [showPopup, setShowPopup] = useState(true);
   const { theme } = useTheme();
 
