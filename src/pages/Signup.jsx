@@ -1,12 +1,13 @@
-// src/pages/Signup.jsx
 import React, { useState } from "react";
 import bcrypt from "bcryptjs";
+import { Lock, Mail, User, Eye, EyeOff, UserPlus } from "lucide-react";
 
 function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
-  const DATABASE_URL = "https://notes-app-9540a-default-rtdb.firebaseio.com";
+  const DATABASE_URL = import.meta.env.VITE_DATABASE_URL;
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -67,41 +68,87 @@ function Signup() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-2xl shadow-md w-96">
-        <h2 className="text-2xl font-bold mb-6 text-center">Signup</h2>
-        <form onSubmit={handleSignup} className="flex flex-col gap-4">
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="border p-2 rounded-lg"
-            required
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="border p-2 rounded-lg"
-            required
-          />
-          <button
-            type="submit"
-            className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
-          >
-            Signup
-          </button>
-        </form>
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 flex items-center justify-center p-4 transition-all duration-500">
+      {/* Background decorative elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-green-400/10 dark:bg-green-500/5 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-emerald-400/10 dark:bg-emerald-500/5 rounded-full blur-3xl"></div>
+      </div>
 
-        <div className="mt-4 text-center">
-          <button
-            className="text-blue-600 underline"
-            onClick={() => (window.location.href = "/login")}
-          >
-            Already have an account? Login
-          </button>
+      <div className="relative z-10 w-full max-w-md">
+        <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-white/20 dark:border-slate-700/50 p-8 rounded-3xl shadow-2xl">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 dark:from-green-400 dark:to-emerald-500 rounded-2xl shadow-xl mb-4">
+              <UserPlus className="text-white" size={32} />
+            </div>
+            <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-800 to-green-800 dark:from-slate-100 dark:to-green-300 bg-clip-text text-transparent">
+              Create Account
+            </h2>
+            <p className="text-gray-600 dark:text-slate-400 mt-2 font-medium">
+              Join us and start learning
+            </p>
+          </div>
+
+          <form onSubmit={handleSignup} className="space-y-6">
+            {/* Email Input */}
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <Mail className="h-5 w-5 text-gray-400 dark:text-slate-500 group-focus-within:text-green-500 dark:group-focus-within:text-green-400 transition-colors" />
+              </div>
+              <input
+                type="email"
+                placeholder="Email address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full pl-12 pr-4 py-4 bg-gray-50/50 dark:bg-slate-700/50 border border-gray-200 dark:border-slate-600 rounded-2xl focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 dark:focus:border-green-400 transition-all duration-300 text-gray-900 dark:text-slate-100 placeholder-gray-500 dark:placeholder-slate-400"
+                required
+              />
+            </div>
+
+            {/* Password Input */}
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <Lock className="h-5 w-5 text-gray-400 dark:text-slate-500 group-focus-within:text-green-500 dark:group-focus-within:text-green-400 transition-colors" />
+              </div>
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full pl-12 pr-12 py-4 bg-gray-50/50 dark:bg-slate-700/50 border border-gray-200 dark:border-slate-600 rounded-2xl focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 dark:focus:border-green-400 transition-all duration-300 text-gray-900 dark:text-slate-100 placeholder-gray-500 dark:placeholder-slate-400"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 dark:text-slate-500 dark:hover:text-slate-300 transition-colors"
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              className="w-full bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-500 dark:to-emerald-500 text-white py-4 rounded-2xl font-semibold text-lg shadow-xl hover:from-green-700 hover:to-emerald-700 dark:hover:from-green-600 dark:hover:to-emerald-600 transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-2xl"
+            >
+              Create Account
+            </button>
+          </form>
+
+          {/* Login Link */}
+          <div className="mt-8 text-center">
+            <p className="text-gray-600 dark:text-slate-400 mb-2">
+              Already have an account?
+            </p>
+            <button
+              className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 font-semibold transition-colors duration-200 hover:underline"
+              onClick={() => (window.location.href = "/login")}
+            >
+              Sign in here
+            </button>
+          </div>
         </div>
       </div>
     </div>

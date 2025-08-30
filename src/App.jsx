@@ -33,7 +33,7 @@ function App() {
         <Route path="/notes" element={<Notes />} />
         <Route path="/videos" element={<Videos />} />
         <Route path="/books" element={<Books />} />
-        <Route path="/admin-users" element={<ManageUser />} />
+        <Route path="/manage-users" element={<ManageUser />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="*" element={<NotFound />} />
