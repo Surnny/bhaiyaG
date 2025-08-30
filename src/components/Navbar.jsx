@@ -1,8 +1,6 @@
+import { useNavigate, Link } from "react-router-dom";
 import { User, LogOut, Home, Phone, Sun, Moon, Info } from "lucide-react";
-import { Link } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
-import { useNavigate } from "react-router-dom";
-
 
 function Navbar() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -11,7 +9,7 @@ function Navbar() {
 
   const handleLogout = () => {
     localStorage.removeItem("user");
-    navigate("/login"); 
+    navigate("/login"); // redirect safely
   };
 
   return (
@@ -22,6 +20,7 @@ function Navbar() {
           : "bg-white/95 border-gray-200/50 text-gray-900"
       }`}
     >
+      {/* Background gradient */}
       <div
         className={`absolute inset-0 ${
           theme === "dark"
@@ -32,12 +31,14 @@ function Navbar() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
+          {/* Logo */}
           <div className="flex-shrink-0">
             <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent hover:scale-105 transition-transform duration-300 cursor-pointer">
               BhaiyaG
             </div>
           </div>
 
+          {/* Center Links */}
           <div className="flex-1 flex justify-center px-4">
             {!user ? (
               <div
@@ -52,8 +53,8 @@ function Navbar() {
                     theme === "dark" ? "text-yellow-300" : "text-orange-700"
                   }`}
                 >
-                  🎉 Welcome to BhaiyaG – Signup or Login to explore within
-                  World! 🚀
+                  🎉 Welcome to BhaiyaG – Signup or Login to explore the World!
+                  🚀
                 </marquee>
               </div>
             ) : (
@@ -62,7 +63,7 @@ function Navbar() {
                   to="/dashboard"
                   className={`group flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all duration-300 hover:scale-105 ${
                     theme === "dark"
-                      ? "hover:bg-gray-800/70 text-gray-300 hover:text-white"
+                      ? "hover:bg-gray-800/70 text-gray-200 hover:text-white"
                       : "hover:bg-blue-50 text-gray-600 hover:text-blue-600"
                   }`}
                 >
@@ -76,7 +77,7 @@ function Navbar() {
                   to="/about"
                   className={`group flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all duration-300 hover:scale-105 ${
                     theme === "dark"
-                      ? "hover:bg-gray-800/70 text-gray-300 hover:text-white"
+                      ? "hover:bg-gray-800/70 text-gray-200 hover:text-white"
                       : "hover:bg-blue-50 text-gray-600 hover:text-blue-600"
                   }`}
                 >
@@ -90,7 +91,7 @@ function Navbar() {
                   to="/contact"
                   className={`group flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all duration-300 hover:scale-105 ${
                     theme === "dark"
-                      ? "hover:bg-gray-800/70 text-gray-300 hover:text-white"
+                      ? "hover:bg-gray-800/70 text-gray-200 hover:text-white"
                       : "hover:bg-blue-50 text-gray-600 hover:text-blue-600"
                   }`}
                 >
@@ -104,7 +105,9 @@ function Navbar() {
             )}
           </div>
 
+          {/* Right Actions */}
           <div className="flex items-center space-x-3">
+            {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
               className={`group relative p-3 rounded-full shadow-lg backdrop-blur-sm border transition-all duration-300 hover:scale-110 hover:shadow-xl ${
@@ -133,8 +136,9 @@ function Navbar() {
               ></div>
             </button>
 
-            {user ? (
+            {user && (
               <div className="flex items-center space-x-3">
+                {/* User Info */}
                 <div
                   className={`group flex items-center gap-3 px-4 py-2 rounded-xl shadow-lg backdrop-blur-sm border transition-all duration-300 hover:scale-105 ${
                     theme === "dark"
@@ -153,13 +157,14 @@ function Navbar() {
                   </div>
                   <span
                     className={`font-medium text-sm hidden sm:block ${
-                      theme === "dark" ? "text-gray-200" : "text-gray-700"
+                      theme === "dark" ? "text-white" : "text-gray-700"
                     }`}
                   >
                     {user?.email}
                   </span>
                 </div>
 
+                {/* Logout Button */}
                 <button
                   onClick={handleLogout}
                   className="group flex items-center gap-2 px-4 py-2 rounded-xl font-medium shadow-lg bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white transition-all duration-300 hover:scale-105 hover:shadow-xl"
@@ -171,12 +176,11 @@ function Navbar() {
                   <span className="hidden sm:block">Logout</span>
                 </button>
               </div>
-            ) : (
-              <div></div>
             )}
           </div>
         </div>
 
+        {/* Mobile Links */}
         {user && (
           <div className="md:hidden border-t border-gray-200/20 pt-2 pb-2">
             <div className="flex justify-center space-x-1">
@@ -184,7 +188,7 @@ function Navbar() {
                 to="/dashboard"
                 className={`group flex items-center gap-2 px-3 py-2 rounded-lg font-medium transition-all duration-300 hover:scale-105 ${
                   theme === "dark"
-                    ? "hover:bg-gray-800/70 text-gray-300 hover:text-white"
+                    ? "hover:bg-gray-800/70 text-gray-200 hover:text-white"
                     : "hover:bg-blue-50 text-gray-600 hover:text-blue-600"
                 }`}
               >
@@ -198,7 +202,7 @@ function Navbar() {
                 to="/about"
                 className={`group flex items-center gap-2 px-3 py-2 rounded-lg font-medium transition-all duration-300 hover:scale-105 ${
                   theme === "dark"
-                    ? "hover:bg-gray-800/70 text-gray-300 hover:text-white"
+                    ? "hover:bg-gray-800/70 text-gray-200 hover:text-white"
                     : "hover:bg-blue-50 text-gray-600 hover:text-blue-600"
                 }`}
               >
@@ -212,7 +216,7 @@ function Navbar() {
                 to="/contact"
                 className={`group flex items-center gap-2 px-3 py-2 rounded-lg font-medium transition-all duration-300 hover:scale-105 ${
                   theme === "dark"
-                    ? "hover:bg-gray-800/70 text-gray-300 hover:text-white"
+                    ? "hover:bg-gray-800/70 text-gray-200 hover:text-white"
                     : "hover:bg-blue-50 text-gray-600 hover:text-blue-600"
                 }`}
               >
