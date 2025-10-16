@@ -297,9 +297,6 @@ const DATABASE_URL = "https://project-name-default-rtdb.firebaseio.com"
 - Check iframe permissions and CORS policies
 - Test with different video privacy settings
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 👨‍💻 Authors & Maintainers
 
