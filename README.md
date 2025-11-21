@@ -1,4 +1,4 @@
-# 📚 BhiayG - Educational Management System
+# 📚 BhaiyaG - Educational Management System
 
 A modern, responsive web application built with React for managing educational content, videos, and user authentication. Features a beautiful dark/light theme interface with comprehensive admin controls.
 
