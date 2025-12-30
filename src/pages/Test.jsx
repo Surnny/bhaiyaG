@@ -11,11 +11,11 @@ function Test() {
   const [title, setTitle] = useState("");
   const [link, setLink] = useState("");
 
-  // ✅ Get logged-in user from localStorage (existing system)
+  // ✅ Get logged-in user from localStorage
   const loggedInUser = JSON.parse(localStorage.getItem("user"));
   const isAdmin = adminEmails.includes(loggedInUser?.email);
 
-  // Fetch tests
+  // ✅ Fetch tests
   useEffect(() => {
     fetch(`${DATABASE_URL}/tests.json`)
       .then((res) => res.json())
@@ -34,7 +34,7 @@ function Test() {
       });
   }, []);
 
-  // Add test (ADMIN ONLY)
+  // ✅ Add test (ADMIN ONLY)
   const handleAddTest = async (e) => {
     e.preventDefault();
 
@@ -52,15 +52,48 @@ function Test() {
     setTitle("");
     setLink("");
     alert("Test added successfully");
-    window.location.reload();
+
+    // Refresh list without reload
+    fetch(`${DATABASE_URL}/tests.json`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (!data) {
+          setTests([]);
+          return;
+        }
+
+        const list = Object.entries(data).map(([id, value]) => ({
+          id,
+          ...value,
+        }));
+
+        setTests(list.reverse());
+      });
+  };
+
+  // ✅ Delete test (ADMIN ONLY)
+  const handleDeleteTest = async (testId) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this test?"
+    );
+
+    if (!confirmDelete) return;
+
+    await fetch(`${DATABASE_URL}/tests/${testId}.json`, {
+      method: "DELETE",
+    });
+
+    // Update UI instantly
+    setTests((prev) => prev.filter((test) => test.id !== testId));
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 py-12 px-4">
       <div className="max-w-5xl mx-auto">
+        {/* Back Button */}
         <div className="mb-6">
-          <a
-            href="/dashboard"
+          <Link
+            to="/dashboard"
             className="inline-flex items-center gap-2 px-4 py-2 bg-white text-indigo-600 font-semibold rounded-lg border-2 border-indigo-200 hover:bg-indigo-50 hover:border-indigo-300 transition-all duration-200 shadow-sm hover:shadow-md group"
           >
             <svg
@@ -77,9 +110,10 @@ function Test() {
               />
             </svg>
             <span>Back to Dashboard</span>
-          </a>
+          </Link>
         </div>
 
+        {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">
             Tests Dashboard
@@ -136,14 +170,26 @@ function Test() {
                 </p>
               </div>
 
-              <a
-                href={test.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-green-600 text-white px-6 py-3 rounded-lg"
-              >
-                Attempt Test
-              </a>
+              <div className="flex gap-3">
+                <a
+                  href={test.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-green-600 text-white px-6 py-3 rounded-lg"
+                >
+                  Attempt Test
+                </a>
+
+                {/* ✅ DELETE BUTTON (ADMIN ONLY) */}
+                {isAdmin && (
+                  <button
+                    onClick={() => handleDeleteTest(test.id)}
+                    className="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition"
+                  >
+                    Delete
+                  </button>
+                )}
+              </div>
             </div>
           ))}
         </div>
