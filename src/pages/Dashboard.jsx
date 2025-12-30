@@ -8,6 +8,7 @@ import {
   Settings,
   Sparkles,
   X,
+  ClipboardCheck,
 } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 
@@ -274,6 +275,48 @@ function Dashboard() {
                   }`}
                 >
                   Browse through curated book collection
+                </p>
+              </div>
+            </Link>
+
+            <Link
+              to="/test"
+              className={`group backdrop-blur-lg rounded-2xl p-8 shadow-xl border transition-all duration-300 transform hover:scale-105 hover:shadow-2xl ${
+                theme === "dark"
+                  ? "bg-gray-800/60 border-gray-700/50 hover:bg-gray-800/80"
+                  : "bg-white/70 border-white/50 hover:bg-white/90"
+              }`}
+            >
+              <div className="text-center">
+                <div
+                  className={`inline-flex p-4 rounded-2xl mb-4 transition-all duration-300 group-hover:scale-110 ${
+                    theme === "dark"
+                      ? "bg-gradient-to-r from-green-500/20 to-green-600/20 border border-green-500/30"
+                      : "bg-gradient-to-r from-green-100 to-green-200 border border-green-300"
+                  }`}
+                >
+                  <ClipboardCheck
+                    size={32}
+                    className={
+                      theme === "dark" ? "text-green-400" : "text-green-600"
+                    }
+                  />
+                </div>
+
+                <h3
+                  className={`text-xl font-semibold mb-2 ${
+                    theme === "dark" ? "text-gray-100" : "text-gray-900"
+                  }`}
+                >
+                  Tests
+                </h3>
+
+                <p
+                  className={`text-sm ${
+                    theme === "dark" ? "text-gray-400" : "text-gray-600"
+                  }`}
+                >
+                  Attempt mock tests and assessments
                 </p>
               </div>
             </Link>

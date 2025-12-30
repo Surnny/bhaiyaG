@@ -15,6 +15,7 @@ import About from "./pages/About";
 import Navbar from "./components/Navbar";
 import Contact from "./components/Contact"; 
 import NotFound from "./pages/NotFound";
+import Test from "./pages/Test";
 
 function App() {
   const handleLogout = () => {
@@ -37,6 +38,7 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="*" element={<NotFound />} />
+        <Route path="/test" element={<Test />} />
       </Routes>
     </Router>
   );
