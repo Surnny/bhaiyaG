@@ -84,21 +84,26 @@ function Dashboard() {
                       : "bg-gradient-to-r from-blue-600 to-indigo-600"
                   }`}
                 >
-                  <Sparkles size={32} className="text-white" />
+                  <img
+                    src="Maj-Jacob.png"
+                    alt="Major"
+                    width={120}
+                    className="text-white"
+                  />
                 </div>
                 <h2
                   className={`text-3xl font-bold mb-2 ${
                     theme === "dark" ? "text-gray-100" : "text-gray-900"
                   }`}
                 >
-                  Ky haal bhai log 😎
+                  KARM WO KARO JO KARNA HI PHAL LAGE
                 </h2>
                 <p
                   className={`text-sm ${
                     theme === "dark" ? "text-gray-400" : "text-gray-600"
                   }`}
                 >
-                  Ready to dive into your learning journey?
+                  - MAJ VIVEK JACOB
                 </p>
               </div>
 
