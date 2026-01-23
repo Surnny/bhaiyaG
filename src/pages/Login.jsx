@@ -49,33 +49,46 @@ function Login() {
     }
   };
 
-  const handleGoogleLogin = async () => {
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      const user = result.user;
+   const handleGoogleLogin = async () => {
+     try {
+       const result = await signInWithPopup(auth, googleProvider);
+       const user = result.user;
 
-      const newUser = {
-        email: user.email,
-        name: user.displayName,
-        photo: user.photoURL,
-        googleAuth: true,
-        block: false,
-      };
+       const res = await fetch(`${DATABASE_URL}/users.json`);
+       const users = (await res.json()) || {};
 
-      await fetch(`${DATABASE_URL}/users.json`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newUser),
-      });
+       const existingUser = Object.values(users).find(
+         (u) => u?.email?.trim().toLowerCase() === user.email.toLowerCase()
+       );
 
-      localStorage.setItem("user", JSON.stringify(newUser));
-      alert("Google login successful!");
-      navigate("/dashboard");
-    } catch (error) {
-      console.error("Google Login Error:", error);
-      alert(error.message);
-    }
-  };
+       let userData;
+
+       if (existingUser) {
+         userData = existingUser;
+       } else {
+         userData = {
+           email: user.email,
+           name: user.displayName,
+           photo: user.photoURL,
+           googleAuth: true,
+           block: false,
+         };
+
+         await fetch(`${DATABASE_URL}/users.json`, {
+           method: "POST",
+           headers: { "Content-Type": "application/json" },
+           body: JSON.stringify(userData),
+         });
+       }
+
+       localStorage.setItem("user", JSON.stringify(userData));
+       alert("Google login successful!");
+       navigate("/dashboard");
+     } catch (error) {
+       console.error("Google Login Error:", error);
+       alert(error.message);
+     }
+   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 flex items-center justify-center p-4">
