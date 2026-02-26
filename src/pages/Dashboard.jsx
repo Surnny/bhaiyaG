@@ -18,10 +18,8 @@ function Dashboard() {
   const [showPopup, setShowPopup] = useState(true);
   const { theme } = useTheme();
 
-  const isAdmin =
-    user?.email === "ayush25.kandari@gmail.com" ||
-    user?.email === "sphsinghpharswan@gmail.com";
-
+  const isAdmin = user?.role==="admin";
+    
   return (
     <div
       className={`min-h-screen transition-all duration-500 relative ${

@@ -39,6 +39,7 @@ function Signup() {
         password: hashedPassword,
         block: false,
         googleAuth: false,
+        role: "user",
       };
 
       await fetch(`${DATABASE_URL}/users.json`, {
@@ -79,6 +80,7 @@ const handleGoogleSignup = async () => {
         photo: user.photoURL,
         googleAuth: true,
         block: false,
+        role: "user",
       };
 
       await fetch(`${DATABASE_URL}/users.json`, {
