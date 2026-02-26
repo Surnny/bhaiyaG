@@ -20,7 +20,6 @@ function Navbar() {
           : "bg-white/95 border-gray-200/50 text-gray-900"
       }`}
     >
-      {/* Background gradient */}
       <div
         className={`absolute inset-0 ${
           theme === "dark"
@@ -105,9 +104,7 @@ function Navbar() {
             )}
           </div>
 
-          {/* Right Actions */}
           <div className="flex items-center space-x-3">
-            {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
               className={`group relative p-3 rounded-full shadow-lg backdrop-blur-sm border transition-all duration-300 hover:scale-110 hover:shadow-xl ${
@@ -155,13 +152,14 @@ function Navbar() {
                   >
                     <User size={16} className="text-white" />
                   </div>
-                  <span
-                    className={`font-medium text-sm hidden sm:block ${
+                  <Link
+                    to="/profile"
+                    className={`font-medium text-sm hidden sm:block hover:underline cursor-pointer ${
                       theme === "dark" ? "text-white" : "text-gray-700"
                     }`}
                   >
                     {user?.email}
-                  </span>
+                  </Link>
                 </div>
 
                 {/* Logout Button */}

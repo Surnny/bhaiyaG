@@ -16,6 +16,7 @@ import Navbar from "./components/Navbar";
 import Contact from "./components/Contact"; 
 import NotFound from "./pages/NotFound";
 import Test from "./pages/Test";
+import Profile from "./pages/Profile";
 
 function App() {
   const handleLogout = () => {
@@ -39,6 +40,7 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="*" element={<NotFound />} />
         <Route path="/test" element={<Test />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </Router>
   );

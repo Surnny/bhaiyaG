@@ -40,6 +40,11 @@ function Signup() {
         block: false,
         googleAuth: false,
         role: "user",
+        name: "",
+        phone: "",
+        dob: "",
+        place: "",
+        photo: "",
       };
 
       await fetch(`${DATABASE_URL}/users.json`, {
@@ -76,11 +81,14 @@ const handleGoogleSignup = async () => {
     } else {
       userData = {
         email: user.email,
-        name: user.displayName,
-        photo: user.photoURL,
+        name: user.displayName || "",
+        photo: user.photoURL || "",
         googleAuth: true,
         block: false,
         role: "user",
+        phone: "",
+        dob: "",
+        place: "",
       };
 
       await fetch(`${DATABASE_URL}/users.json`, {

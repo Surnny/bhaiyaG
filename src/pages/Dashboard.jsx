@@ -126,13 +126,21 @@ function Dashboard() {
               Welcome back,
             </span>
           </h1>
-          <p
-            className={`text-lg mb-2 ${
-              theme === "dark" ? "text-gray-300" : "text-gray-700"
-            }`}
-          >
-            {user?.email}
-          </p>
+          <div className="flex items-center gap-4 justify-center lg:justify-start mb-2">
+            <img
+              src={user?.photo || "https://via.placeholder.com/60"}
+              alt="Profile"
+              className="w-12 h-12 rounded-full object-cover border"
+            />
+
+            <p
+              className={`text-lg ${
+                theme === "dark" ? "text-gray-300" : "text-gray-700"
+              }`}
+            >
+              {user?.email}
+            </p>
+          </div>
           <p
             className={`${
               theme === "dark" ? "text-gray-400" : "text-gray-600"
