@@ -40,7 +40,14 @@ function Login() {
         return;
       }
 
-      localStorage.setItem("user", JSON.stringify(userEntry));
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          email: userEntry.email,
+          name: userEntry.name || "",
+          role: userEntry.role || "user",
+        })
+      );
       alert("✅ Login successful!");
       navigate("/dashboard");
     } catch (err) {
@@ -49,46 +56,53 @@ function Login() {
     }
   };
 
-   const handleGoogleLogin = async () => {
-     try {
-       const result = await signInWithPopup(auth, googleProvider);
-       const user = result.user;
+  const handleGoogleLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
 
-       const res = await fetch(`${DATABASE_URL}/users.json`);
-       const users = (await res.json()) || {};
+      const res = await fetch(`${DATABASE_URL}/users.json`);
+      const users = (await res.json()) || {};
 
-       const existingUser = Object.values(users).find(
-         (u) => u?.email?.trim().toLowerCase() === user.email.toLowerCase()
-       );
+      const existingUser = Object.values(users).find(
+        (u) => u?.email?.trim().toLowerCase() === user.email.toLowerCase()
+      );
 
-       let userData;
+      let userData;
 
-       if (existingUser) {
-         userData = existingUser;
-       } else {
-         userData = {
-           email: user.email,
-           name: user.displayName,
-           photo: user.photoURL,
-           googleAuth: true,
-           block: false,
-         };
+      if (existingUser) {
+        userData = existingUser;
+      } else {
+        userData = {
+          email: user.email,
+          name: user.displayName,
+          //  photo: user.photoURL,
+          googleAuth: true,
+          block: false,
+        };
 
-         await fetch(`${DATABASE_URL}/users.json`, {
-           method: "POST",
-           headers: { "Content-Type": "application/json" },
-           body: JSON.stringify(userData),
-         });
-       }
+        await fetch(`${DATABASE_URL}/users.json`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(userData),
+        });
+      }
 
-       localStorage.setItem("user", JSON.stringify(userData));
-       alert("Google login successful!");
-       navigate("/dashboard");
-     } catch (error) {
-       console.error("Google Login Error:", error);
-       alert(error.message);
-     }
-   };
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          email: userData.email,
+          name: userData.name || "",
+          role: userData.role || "user",
+        })
+      );
+      alert("Google login successful!");
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Google Login Error:", error);
+      alert(error.message);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 flex items-center justify-center p-4">
